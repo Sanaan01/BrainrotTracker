@@ -3,17 +3,18 @@ using System.Linq;
 using System.Threading;
 using Brainrot.Core;
 
-namespace Brainrot.Console
+namespace Brainrot.TrackerConsole
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var tracker = new BrainrotTracker();
 
-            System.Console.WriteLine("Brainrot tracker – per-app usage (seconds)");
-            System.Console.WriteLine("Press Ctrl+C to exit.");
-            System.Console.WriteLine();
+            Console.Clear();
+            Console.WriteLine("Brainrot tracker – per-app usage (seconds)");
+            Console.WriteLine("Press Ctrl+C to exit.");
+            Console.WriteLine();
 
             int tick = 0;
 
@@ -24,34 +25,28 @@ namespace Brainrot.Console
 
                 if (tick % 5 == 0)
                 {
-                    PrintSnapshot(tracker.GetSnapshot());
+                    Console.Clear();
+                    Console.WriteLine("Brainrot tracker – per-app usage (seconds)");
+                    Console.WriteLine("Press Ctrl+C to exit.");
+                    Console.WriteLine();
+
+                    var snapshot = tracker.GetSnapshot();
+
+                    Console.WriteLine($"Rot:     {FormatTime(snapshot.RotSeconds)}");
+                    Console.WriteLine($"Focus:   {FormatTime(snapshot.FocusSeconds)}");
+                    Console.WriteLine($"Neutral: {FormatTime(snapshot.NeutralSeconds)}");
+                    Console.WriteLine();
+                    Console.WriteLine("Per-app usage (top few):");
+
+                    foreach (var kvp in snapshot.PerAppSeconds
+                                 .OrderByDescending(kvp => kvp.Value)
+                                 .Take(10))
+                    {
+                        Console.WriteLine($"- {kvp.Key,-20} {FormatTime(kvp.Value)}");
+                    }
                 }
 
                 Thread.Sleep(1000);
-            }
-        }
-
-        private static void PrintSnapshot(BrainUsageSnapshot snapshot)
-        {
-            var topApps = snapshot.PerAppSeconds
-                .OrderByDescending(kvp => kvp.Value)
-                .Take(10)
-                .ToList();
-
-            System.Console.Clear();
-            System.Console.WriteLine("Brainrot tracker – per-app usage (seconds)");
-            System.Console.WriteLine("Press Ctrl+C to exit.");
-            System.Console.WriteLine();
-
-            System.Console.WriteLine($"Rot:     {FormatTime(snapshot.RotSeconds)}");
-            System.Console.WriteLine($"Focus:   {FormatTime(snapshot.FocusSeconds)}");
-            System.Console.WriteLine($"Neutral: {FormatTime(snapshot.NeutralSeconds)}");
-            System.Console.WriteLine();
-
-            System.Console.WriteLine("Per-app usage (top):");
-            foreach (var kvp in topApps)
-            {
-                System.Console.WriteLine($"- {kvp.Key,-20} {FormatTime(kvp.Value)}");
             }
         }
 

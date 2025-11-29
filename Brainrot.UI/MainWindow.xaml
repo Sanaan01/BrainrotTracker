@@ -8,7 +8,9 @@
     mc:Ignorable="d"
     Title="Brainrot Tracker">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="24">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+          Padding="24">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -16,57 +18,93 @@
         </Grid.RowDefinitions>
 
         <!-- Brain state header -->
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
             <TextBlock x:Name="EmojiText"
                        FontSize="32"
-                       Margin="0,0,8,0"/>
-            <TextBlock x:Name="BrainStateText"
-                       FontSize="24"
-                       VerticalAlignment="Center"/>
+                       Text="💀"
+                       Margin="0,0,12,0" />
+
+            <StackPanel>
+                <TextBlock x:Name="BrainStateText"
+                           Text="Full brainrot"
+                           FontSize="24"
+                           FontWeight="SemiBold" />
+
+                <TextBlock x:Name="FocusVsRotLabel"
+                           Text="0% focus"
+                           FontSize="14"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
         </StackPanel>
 
-        <!-- Totals + focus vs rot -->
-        <StackPanel Grid.Row="1" Margin="0,16,0,0">
-            <TextBlock Text="Totals"
-                       FontSize="18"
-                       FontWeight="SemiBold"/>
+        <!-- Totals + bar -->
+        <StackPanel Grid.Row="1" Margin="0,24,0,12">
+            <StackPanel Orientation="Horizontal" Spacing="24">
+                <TextBlock>
+                    <Run Text="Rot: " />
+                    <Run x:Name="RotText" Text="0m 00s" />
+                </TextBlock>
 
-            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                <TextBlock Text="Rot:"/>
-                <TextBlock x:Name="RotText" Margin="4,0,16,0"/>
-                <TextBlock Text="Focus:"/>
-                <TextBlock x:Name="FocusText" Margin="4,0,16,0"/>
-                <TextBlock Text="Neutral:"/>
-                <TextBlock x:Name="NeutralText" Margin="4,0,0,0"/>
+                <TextBlock>
+                    <Run Text="Focus: " />
+                    <Run x:Name="FocusText" Text="0m 00s" />
+                </TextBlock>
+
+                <TextBlock>
+                    <Run Text="Neutral: " />
+                    <Run x:Name="NeutralText" Text="0m 00s" />
+                </TextBlock>
             </StackPanel>
 
-            <StackPanel Margin="0,8,0,0">
-                <TextBlock x:Name="FocusVsRotLabel"/>
-                <ProgressBar x:Name="FocusVsRotBar"
-                             Minimum="0"
-                             Maximum="100"
-                             Height="8"
-                             Margin="0,4,0,0"/>
-            </StackPanel>
+            <ProgressBar x:Name="FocusVsRotBar"
+                         Margin="0,8,0,0"
+                         Minimum="0"
+                         Maximum="100"
+                         Value="0"
+                         Height="6" />
         </StackPanel>
 
         <!-- Per-app list -->
-        <Grid Grid.Row="2" Margin="0,16,0,0">
-            <ListView x:Name="AppsList">
+        <Grid Grid.Row="2" Margin="0,12,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Per-app usage"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8" />
+
+            <ListView x:Name="AppsList"
+                      Grid.Row="1">
+
                 <ListView.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="App" Width="200"/>
-                        <TextBlock Text="Duration" Width="100"/>
-                        <TextBlock Text="Category"/>
-                    </StackPanel>
+                    <Grid Padding="4,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="App" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Duration" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="2" Text="Category" FontWeight="SemiBold" />
+                    </Grid>
                 </ListView.Header>
+
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding AppName}" Width="200"/>
-                            <TextBlock Text="{Binding Duration}" Width="100"/>
-                            <TextBlock Text="{Binding Category}"/>
-                        </StackPanel>
+                        <Grid Padding="4,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding AppName}" />
+                            <TextBlock Grid.Column="1" Text="{Binding Duration}" />
+                            <TextBlock Grid.Column="2" Text="{Binding Category}" />
+                        </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

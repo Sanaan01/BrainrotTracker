@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
+
 
 namespace Brainrot.Core
 {
@@ -13,10 +15,12 @@ namespace Brainrot.Core
         private int _rotSeconds;
         private int _focusSeconds;
         private int _neutralSeconds;
+        
+        private readonly string _selfProcessName = Process.GetCurrentProcess().ProcessName;
 
         public BrainrotTracker()
         {
-            // Default categories – we can tweak later
+            // Apps counted as "brainrot"
             _rotApps = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
                 "chrome",
@@ -24,10 +28,11 @@ namespace Brainrot.Core
                 "discord",
                 "steam",
                 "Spotify",
-                "TikTok",   // just in case on desktop
+                "TikTok",   // desktop clients, just in case
                 "Instagram"
             };
 
+            // Apps counted as "focus"
             _focusApps = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
                 "Code",     // VS Code
@@ -48,6 +53,11 @@ namespace Brainrot.Core
             var processName = NativeMethods.GetActiveProcessName();
             if (string.IsNullOrWhiteSpace(processName))
                 return;
+
+            // Ignore our own tracker window so it doesn't show up in stats
+            if (string.Equals(processName, _selfProcessName, StringComparison.OrdinalIgnoreCase))
+                return;
+
 
             if (!_perAppSeconds.TryGetValue(processName, out var seconds))
             {

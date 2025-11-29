@@ -30,6 +30,7 @@ namespace Brainrot.UI
             _tracker.Tick();
             _tick++;
 
+            // Refresh UI every 5 seconds to avoid flicker
             if (_tick % 5 == 0)
             {
                 var snapshot = _tracker.GetSnapshot();
@@ -65,7 +66,7 @@ namespace Brainrot.UI
                     {
                         AppName = kvp.Key,
                         Duration = FormatTime(kvp.Value),
-                        Category = "" // we don’t expose category yet
+                        Category = "" // category not shown yet
                     })
                 .ToList();
 
@@ -95,6 +96,7 @@ namespace Brainrot.UI
             return ("Locked in", "🧠");
         }
 
+        // Model used to populate the ListView
         private class AppUsageRow
         {
             public string AppName { get; set; } = "";
