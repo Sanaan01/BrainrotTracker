@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Brainrot.Console/Brainrot.Console.csproj" />
+  <Project Path="Brainrot.Core/Brainrot.Core.csproj" />
+  <Project Path="Brainrot.UI/Brainrot.UI.csproj">
+    <Platform Project="x64" />
+    <Deploy />
+  </Project>
+</Solution>

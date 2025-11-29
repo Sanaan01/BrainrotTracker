@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Brainrot.UI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Brainrot.UI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

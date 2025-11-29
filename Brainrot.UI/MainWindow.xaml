@@ -1,0 +1,75 @@
+<Window
+    x:Class="Brainrot.UI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:Brainrot.UI"
+    mc:Ignorable="d"
+    Title="Brainrot Tracker">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Brain state header -->
+        <StackPanel Orientation="Horizontal">
+            <TextBlock x:Name="EmojiText"
+                       FontSize="32"
+                       Margin="0,0,8,0"/>
+            <TextBlock x:Name="BrainStateText"
+                       FontSize="24"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Totals + focus vs rot -->
+        <StackPanel Grid.Row="1" Margin="0,16,0,0">
+            <TextBlock Text="Totals"
+                       FontSize="18"
+                       FontWeight="SemiBold"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                <TextBlock Text="Rot:"/>
+                <TextBlock x:Name="RotText" Margin="4,0,16,0"/>
+                <TextBlock Text="Focus:"/>
+                <TextBlock x:Name="FocusText" Margin="4,0,16,0"/>
+                <TextBlock Text="Neutral:"/>
+                <TextBlock x:Name="NeutralText" Margin="4,0,0,0"/>
+            </StackPanel>
+
+            <StackPanel Margin="0,8,0,0">
+                <TextBlock x:Name="FocusVsRotLabel"/>
+                <ProgressBar x:Name="FocusVsRotBar"
+                             Minimum="0"
+                             Maximum="100"
+                             Height="8"
+                             Margin="0,4,0,0"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Per-app list -->
+        <Grid Grid.Row="2" Margin="0,16,0,0">
+            <ListView x:Name="AppsList">
+                <ListView.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="App" Width="200"/>
+                        <TextBlock Text="Duration" Width="100"/>
+                        <TextBlock Text="Category"/>
+                    </StackPanel>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding AppName}" Width="200"/>
+                            <TextBlock Text="{Binding Duration}" Width="100"/>
+                            <TextBlock Text="{Binding Category}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </Grid>
+</Window>
