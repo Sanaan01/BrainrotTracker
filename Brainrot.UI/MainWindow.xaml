@@ -6,108 +6,228 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:Brainrot.UI"
     mc:Ignorable="d"
-    Title="Brainrot Tracker">
+    Title="Brainrot Tracker"
+    ExtendsContentIntoTitleBar="True">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-          Padding="24">
+    <Grid Background="Transparent">
+        <ScrollViewer Padding="20" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="16">
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="12"
+                        Padding="20"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <StackPanel Spacing="12">
+                        <!-- Brain state header -->
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="12">
+                            <Border Background="{ThemeResource SystemFillColorSuccessBrush}"
+                                    CornerRadius="12"
+                                    Padding="12"
+                                    VerticalAlignment="Center">
+                                <TextBlock x:Name="EmojiText"
+                                           FontSize="28"
+                                           Text="💀" />
+                            </Border>
 
-        <!-- Brain state header -->
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <TextBlock x:Name="EmojiText"
-                       FontSize="32"
-                       Text="💀"
-                       Margin="0,0,12,0" />
+                            <StackPanel>
+                                <TextBlock x:Name="BrainStateText"
+                                           Text="Full brainrot"
+                                           FontSize="26"
+                                           FontWeight="SemiBold" />
 
-            <StackPanel>
-                <TextBlock x:Name="BrainStateText"
-                           Text="Full brainrot"
-                           FontSize="24"
-                           FontWeight="SemiBold" />
+                                <TextBlock x:Name="FocusVsRotLabel"
+                                           Text="0% focus"
+                                           FontSize="14"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                        </StackPanel>
 
-                <TextBlock x:Name="FocusVsRotLabel"
-                           Text="0% focus"
-                           FontSize="14"
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-            </StackPanel>
-        </StackPanel>
+                        <!-- Totals + bar -->
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="24">
+                                <TextBlock>
+                                    <Run Text="Rot: " />
+                                    <Run x:Name="RotText" Text="0m 00s" />
+                                </TextBlock>
 
-        <!-- Totals + bar -->
-        <StackPanel Grid.Row="1" Margin="0,24,0,12">
-            <StackPanel Orientation="Horizontal" Spacing="24">
-                <TextBlock>
-                    <Run Text="Rot: " />
-                    <Run x:Name="RotText" Text="0m 00s" />
-                </TextBlock>
+                                <TextBlock>
+                                    <Run Text="Focus: " />
+                                    <Run x:Name="FocusText" Text="0m 00s" />
+                                </TextBlock>
 
-                <TextBlock>
-                    <Run Text="Focus: " />
-                    <Run x:Name="FocusText" Text="0m 00s" />
-                </TextBlock>
+                                <TextBlock>
+                                    <Run Text="Neutral: " />
+                                    <Run x:Name="NeutralText" Text="0m 00s" />
+                                </TextBlock>
+                            </StackPanel>
 
-                <TextBlock>
-                    <Run Text="Neutral: " />
-                    <Run x:Name="NeutralText" Text="0m 00s" />
-                </TextBlock>
-            </StackPanel>
+                            <ProgressBar x:Name="FocusVsRotBar"
+                                         Minimum="0"
+                                         Maximum="100"
+                                         Value="0"
+                                         Height="8" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
 
-            <ProgressBar x:Name="FocusVsRotBar"
-                         Margin="0,8,0,0"
-                         Minimum="0"
-                         Maximum="100"
-                         Value="0"
-                         Height="6" />
-        </StackPanel>
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="12"
+                        Padding="20"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Manage app categories"
+                                   FontSize="18"
+                                   FontWeight="SemiBold" />
+                        <TextBlock Text="Tell the tracker which processes count as rot, focus, or neutral so the meter reflects how you work."
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
-        <!-- Per-app list -->
-        <Grid Grid.Row="2" Margin="0,12,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBox x:Name="AppNameInput"
+                                     Width="220"
+                                     PlaceholderText="Process name (e.g. chrome)" />
+                            <Button Content="Add to Rot"
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    Click="AddToRot_Click" />
+                            <Button Content="Add to Focus"
+                                    Click="AddToFocus_Click" />
+                            <Button Content="Add as Neutral"
+                                    Click="AddToNeutral_Click" />
+                        </StackPanel>
 
-            <TextBlock Text="Per-app usage"
-                       FontSize="16"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,8" />
-
-            <ListView x:Name="AppsList"
-                      Grid.Row="1">
-
-                <ListView.Header>
-                    <Grid Padding="4,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="App" FontWeight="SemiBold" />
-                        <TextBlock Grid.Column="1" Text="Duration" FontWeight="SemiBold" />
-                        <TextBlock Grid.Column="2" Text="Category" FontWeight="SemiBold" />
-                    </Grid>
-                </ListView.Header>
-
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="4,2">
+                        <Grid ColumnSpacing="12">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="{Binding AppName}" />
-                            <TextBlock Grid.Column="1" Text="{Binding Duration}" />
-                            <TextBlock Grid.Column="2" Text="{Binding Category}" />
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Rot apps" FontWeight="SemiBold" />
+                                <ItemsControl x:Name="RotAppsList">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{ThemeResource SystemFillColorAttentionBrush}"
+                                                    BorderBrush="{ThemeResource SystemFillColorAttentionBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="8"
+                                                    Padding="8,4"
+                                                    Margin="0,0,0,4">
+                                                <TextBlock Text="{Binding}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Spacing="6">
+                                <TextBlock Text="Focus apps" FontWeight="SemiBold" />
+                                <ItemsControl x:Name="FocusAppsList">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{ThemeResource SystemFillColorSuccessBrush}"
+                                                    BorderBrush="{ThemeResource SystemFillColorSuccessBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="8"
+                                                    Padding="8,4"
+                                                    Margin="0,0,0,4">
+                                                <TextBlock Text="{Binding}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2" Spacing="6">
+                                <TextBlock Text="Neutral apps" FontWeight="SemiBold" />
+                                <ItemsControl x:Name="NeutralAppsList">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="{ThemeResource SystemFillColorCautionBrush}"
+                                                    BorderBrush="{ThemeResource SystemFillColorCautionBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="8"
+                                                    Padding="8,4"
+                                                    Margin="0,0,0,4">
+                                                <TextBlock Text="{Binding}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
                         </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        CornerRadius="12"
+                        Padding="20"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Per-app usage"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,8" />
+
+                        <ListView x:Name="AppsList"
+                                  Grid.Row="1"
+                                  BorderThickness="0"
+                                  SelectionMode="None">
+
+                            <ListView.Header>
+                                <Grid Padding="4,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="App" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1" Text="Duration" FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="2" Text="Category" FontWeight="SemiBold" />
+                                </Grid>
+                            </ListView.Header>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="4,8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="{Binding AppName}" />
+                                        <TextBlock Grid.Column="1" Text="{Binding Duration}" />
+                                        <TextBlock Grid.Column="2" Text="{Binding Category}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </Window>
