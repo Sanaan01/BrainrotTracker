@@ -132,6 +132,31 @@ namespace Brainrot.Core
                 .Take(count);
         }
 
+        public UsageCategory GetAppCategory(string appName)
+        {
+            if (string.IsNullOrWhiteSpace(appName))
+            {
+                return UsageCategory.Neutral;
+            }
+
+            if (_rotApps.Contains(appName))
+            {
+                return UsageCategory.Rot;
+            }
+
+            if (_focusApps.Contains(appName))
+            {
+                return UsageCategory.Focus;
+            }
+
+            if (_neutralApps.Contains(appName))
+            {
+                return UsageCategory.Neutral;
+            }
+
+            return UsageCategory.Neutral;
+        }
+
         public void SetAppCategory(string appName, UsageCategory category)
         {
             if (string.IsNullOrWhiteSpace(appName))
