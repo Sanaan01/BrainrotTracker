@@ -60,6 +60,13 @@
     </Window.Resources>
 
     <Grid x:Name="TitleBarHost" Background="{ThemeResource AppBackgroundBrush}">
+    <Grid x:Name="TitleBarHost">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F6F9FF" Offset="0" />
+                <GradientStop Color="#EEF2FF" Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
 
         <ScrollViewer Padding="24" VerticalScrollBarVisibility="Auto">
             <StackPanel Spacing="16">
@@ -82,6 +89,7 @@
                     <!-- Summary cards -->
                     <StackPanel Spacing="10">
                         <Border Background="{ThemeResource CardBackgroundBrush}" Padding="16" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                        <Border Background="#FFFFFF" Padding="16" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
                             <StackPanel Spacing="4">
                                 <TextBlock Text="Total Active Time" FontWeight="SemiBold" />
                                 <TextBlock x:Name="TotalTimeText"
@@ -99,6 +107,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Border Background="{ThemeResource FocusCardBackgroundBrush}" CornerRadius="14" Padding="12" BorderBrush="{ThemeResource FocusCardStrokeBrush}" BorderThickness="1">
+                            <Border Background="#F1F8FF" CornerRadius="14" Padding="12" BorderBrush="#D5E7FF" BorderThickness="1">
                                 <StackPanel>
                                     <TextBlock Text="Focus Time" FontWeight="SemiBold" />
                                     <TextBlock x:Name="FocusText" Text="0m 00s" FontSize="20" FontWeight="SemiBold" />
@@ -107,6 +116,7 @@
                             </Border>
 
                             <Border Grid.Column="1" Background="{ThemeResource RotCardBackgroundBrush}" CornerRadius="14" Padding="12" BorderBrush="{ThemeResource RotCardStrokeBrush}" BorderThickness="1">
+                            <Border Grid.Column="1" Background="#FFF6F2" CornerRadius="14" Padding="12" BorderBrush="#FFE0D5" BorderThickness="1">
                                 <StackPanel>
                                     <TextBlock Text="Rot Time" FontWeight="SemiBold" />
                                     <TextBlock x:Name="RotText" Text="0m 00s" FontSize="20" FontWeight="SemiBold" />
@@ -116,6 +126,7 @@
                         </Grid>
 
                         <Border Background="{ThemeResource NeutralCardBackgroundBrush}" CornerRadius="14" Padding="12" BorderBrush="{ThemeResource NeutralCardStrokeBrush}" BorderThickness="1">
+                        <Border Background="#FEFFF6" CornerRadius="14" Padding="12" BorderBrush="#EEF1D2" BorderThickness="1">
                             <StackPanel>
                                 <TextBlock Text="Neutral Time" FontWeight="SemiBold" />
                                 <TextBlock x:Name="NeutralText" Text="0m 00s" FontSize="20" FontWeight="SemiBold" />
@@ -126,6 +137,7 @@
 
                     <!-- Brain health card -->
                     <Border Grid.Column="1" Background="{ThemeResource CardBackgroundBrush}" Padding="20" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                    <Border Grid.Column="1" Background="#FFFFFF" Padding="20" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -133,6 +145,7 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel Width="140" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
                                 <Ellipse Width="120" Height="120" Fill="{ThemeResource AvatarFillBrush}" Stroke="{ThemeResource AvatarStrokeBrush}" StrokeThickness="2" />
+                                <Ellipse Width="120" Height="120" Fill="#F7F9FF" Stroke="#E7ECFF" StrokeThickness="2" />
                                 <TextBlock x:Name="EmojiText" Text="💀" FontSize="28" HorizontalAlignment="Center" />
                             </StackPanel>
 
@@ -152,6 +165,18 @@
 
                     <!-- Quick categorize -->
                     <Border Grid.Column="2" Background="{ThemeResource CardBackgroundBrush}" Padding="18" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Quick Categorize" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock Text="Drop in a process name and tag it so the tracker stays accurate." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                            <TextBox x:Name="AppNameInput"
+                                     PlaceholderText="e.g. chrome"
+                                     Header="Process name"
+                                     Margin="0,4,0,0" />
+
+
+                    <!-- Quick categorize -->
+                    <Border Grid.Column="2" Background="#FFFFFF" Padding="18" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
                         <StackPanel Spacing="12">
                             <TextBlock Text="Quick Categorize" FontSize="18" FontWeight="SemiBold" />
                             <TextBlock Text="Drop in a process name and tag it so the tracker stays accurate." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
@@ -182,6 +207,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Background="{ThemeResource CardBackgroundBrush}" Padding="18" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                    <Border Background="#FFFFFF" Padding="18" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
                         <StackPanel Spacing="12">
                             <TextBlock Text="Category breakdown" FontSize="18" FontWeight="SemiBold" />
                             <TextBlock Text="Manage the lists that define your rot, focus, and neutral apps." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
@@ -206,6 +232,8 @@
                                             <DataTemplate>
                                                 <Border Background="{ThemeResource RotPillBackgroundBrush}"
                                                         BorderBrush="{ThemeResource RotPillStrokeBrush}"
+                                                <Border Background="#FFF2EE"
+                                                        BorderBrush="#FFDDD2"
                                                         BorderThickness="1"
                                                         CornerRadius="8"
                                                         Padding="10,6"
@@ -230,6 +258,8 @@
                                             <DataTemplate>
                                                 <Border Background="{ThemeResource FocusPillBackgroundBrush}"
                                                         BorderBrush="{ThemeResource FocusPillStrokeBrush}"
+                                                <Border Background="#E7F8EE"
+                                                        BorderBrush="#CFEADC"
                                                         BorderThickness="1"
                                                         CornerRadius="8"
                                                         Padding="10,6"
@@ -254,6 +284,8 @@
                                             <DataTemplate>
                                                 <Border Background="{ThemeResource NeutralPillBackgroundBrush}"
                                                         BorderBrush="{ThemeResource NeutralPillStrokeBrush}"
+                                                <Border Background="#FFF8E7"
+                                                        BorderBrush="#F3E7C8"
                                                         BorderThickness="1"
                                                         CornerRadius="8"
                                                         Padding="10,6"
@@ -269,6 +301,7 @@
                     </Border>
 
                     <Border Grid.Column="1" Background="{ThemeResource CardBackgroundBrush}" Padding="18" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                    <Border Grid.Column="1" Background="#FFFFFF" Padding="18" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
