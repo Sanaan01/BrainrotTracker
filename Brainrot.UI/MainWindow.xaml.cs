@@ -23,6 +23,9 @@ namespace Brainrot.UI
             };
             _timer.Tick += OnTimerTick;
             _timer.Start();
+
+            var snapshot = _tracker.GetSnapshot();
+            UpdateUi(snapshot);
         }
 
         private void OnTimerTick(object sender, object e)
