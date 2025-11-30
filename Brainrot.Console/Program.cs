@@ -16,6 +16,8 @@ namespace Brainrot.TrackerConsole
             Console.WriteLine("Press Ctrl+C to exit.");
             Console.WriteLine();
 
+            RenderSnapshot(tracker);
+
             int tick = 0;
 
             while (true)
@@ -25,28 +27,33 @@ namespace Brainrot.TrackerConsole
 
                 if (tick % 5 == 0)
                 {
-                    Console.Clear();
-                    Console.WriteLine("Brainrot tracker – per-app usage (seconds)");
-                    Console.WriteLine("Press Ctrl+C to exit.");
-                    Console.WriteLine();
-
-                    var snapshot = tracker.GetSnapshot();
-
-                    Console.WriteLine($"Rot:     {FormatTime(snapshot.RotSeconds)}");
-                    Console.WriteLine($"Focus:   {FormatTime(snapshot.FocusSeconds)}");
-                    Console.WriteLine($"Neutral: {FormatTime(snapshot.NeutralSeconds)}");
-                    Console.WriteLine();
-                    Console.WriteLine("Per-app usage (top few):");
-
-                    foreach (var kvp in snapshot.PerAppSeconds
-                                 .OrderByDescending(kvp => kvp.Value)
-                                 .Take(10))
-                    {
-                        Console.WriteLine($"- {kvp.Key,-20} {FormatTime(kvp.Value)}");
-                    }
+                    RenderSnapshot(tracker);
                 }
 
                 Thread.Sleep(1000);
+            }
+        }
+
+        private static void RenderSnapshot(BrainrotTracker tracker)
+        {
+            Console.Clear();
+            Console.WriteLine("Brainrot tracker – per-app usage (seconds)");
+            Console.WriteLine("Press Ctrl+C to exit.");
+            Console.WriteLine();
+
+            var snapshot = tracker.GetSnapshot();
+
+            Console.WriteLine($"Rot:     {FormatTime(snapshot.RotSeconds)}");
+            Console.WriteLine($"Focus:   {FormatTime(snapshot.FocusSeconds)}");
+            Console.WriteLine($"Neutral: {FormatTime(snapshot.NeutralSeconds)}");
+            Console.WriteLine();
+            Console.WriteLine("Per-app usage (top few):");
+
+            foreach (var kvp in snapshot.PerAppSeconds
+                         .OrderByDescending(kvp => kvp.Value)
+                         .Take(10))
+            {
+                Console.WriteLine($"- {kvp.Key,-20} {FormatTime(kvp.Value)}");
             }
         }
 
