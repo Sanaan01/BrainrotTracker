@@ -22,6 +22,10 @@ namespace Brainrot.UI
         {
             this.InitializeComponent();
 
+            // Custom title bar region
+            ExtendsContentIntoTitleBar = true;
+            SetTitleBar(TitleBarHost);
+
             ApplyBackdrop();
 
             _tracker = new BrainrotTracker();
@@ -68,9 +72,9 @@ namespace Brainrot.UI
             int rot = snapshot.RotSeconds;
             int focus = snapshot.FocusSeconds;
             int totalFocusRot = rot + focus;
-
-            double focusFraction =
-                totalFocusRot > 0 ? (double)focus / totalFocusRot : 0.5;
+            double focusFraction = totalFocusRot > 0
+                ? (double)focus / totalFocusRot
+                : 0.5;
 
             FocusVsRotBar.Value = focusFraction * 100;
             FocusVsRotLabel.Text = $"{Math.Round(focusFraction * 100)}% focus";
@@ -78,13 +82,12 @@ namespace Brainrot.UI
             var rows = snapshot.PerAppSeconds
                 .OrderByDescending(kvp => kvp.Value)
                 .Take(10)
-                .Select(kvp =>
-                    new AppUsageRow
-                    {
-                        AppName = kvp.Key,
-                        Duration = FormatTime(kvp.Value),
-                        Category = string.Empty // category not shown yet
-                    })
+                .Select(kvp => new AppUsageRow
+                {
+                    AppName = kvp.Key,
+                    Duration = FormatTime(kvp.Value),
+                    Category = "" // you can wire in real category later
+                })
                 .ToList();
 
             AppsList.ItemsSource = rows;
@@ -101,10 +104,11 @@ namespace Brainrot.UI
             NeutralAppsList.ItemsSource = _neutralApps;
         }
 
-        private static void ResetCollection(ObservableCollection<string> target, System.Collections.Generic.IEnumerable<string> items)
+        private static void ResetCollection(
+            ObservableCollection<string> target,
+            System.Collections.Generic.IEnumerable<string> items)
         {
             target.Clear();
-
             foreach (var item in items.OrderBy(i => i))
             {
                 target.Add(item);
@@ -112,30 +116,23 @@ namespace Brainrot.UI
         }
 
         private void AddToRot_Click(object sender, RoutedEventArgs e)
-        {
-            AddAppToCategory(UsageCategory.Rot);
-        }
+            => AddAppToCategory(UsageCategory.Rot);
 
         private void AddToFocus_Click(object sender, RoutedEventArgs e)
-        {
-            AddAppToCategory(UsageCategory.Focus);
-        }
+            => AddAppToCategory(UsageCategory.Focus);
 
         private void AddToNeutral_Click(object sender, RoutedEventArgs e)
-        {
-            AddAppToCategory(UsageCategory.Neutral);
-        }
+            => AddAppToCategory(UsageCategory.Neutral);
 
         private void AddAppToCategory(UsageCategory category)
         {
             var appName = AppNameInput.Text?.Trim();
             if (string.IsNullOrWhiteSpace(appName))
-            {
                 return;
-            }
 
             _tracker.SetAppCategory(appName, category);
             AppNameInput.Text = string.Empty;
+
             RefreshCategoryLists();
             UpdateUi(_tracker.GetSnapshot());
         }
@@ -154,8 +151,9 @@ namespace Brainrot.UI
             if (total < 10)
                 return ("Warming up", "❓");
 
-            double focusRatio =
-                total > 0 ? (double)snapshot.FocusSeconds / total : 0;
+            double focusRatio = total > 0
+                ? (double)snapshot.FocusSeconds / total
+                : 0;
 
             if (focusRatio < 0.20) return ("Full brainrot", "💀");
             if (focusRatio < 0.50) return ("Struggling", "😵");
@@ -165,18 +163,24 @@ namespace Brainrot.UI
 
         private void ApplyBackdrop()
         {
-            if (MicaController.IsSupported())
+            // Use Mica if available, fall back to acrylic
+            try
             {
-                SystemBackdrop = new MicaBackdrop
+                if (MicaController.IsSupported())
                 {
-                    Kind = MicaKind.BaseAlt
-                };
-                return;
+                    SystemBackdrop = new MicaBackdrop
+                    {
+                        Kind = MicaKind.BaseAlt
+                    };
+                }
+                else
+                {
+                    SystemBackdrop = new DesktopAcrylicBackdrop();
+                }
             }
-
-            if (DesktopAcrylicBackdrop.IsSupported())
+            catch
             {
-                SystemBackdrop = new DesktopAcrylicBackdrop();
+                // If system backdrop fails for some reason, just keep default solid background
             }
         }
 

@@ -5,27 +5,35 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:Brainrot.UI"
-    xmlns:ui="using:Microsoft.UI.Xaml"
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
     mc:Ignorable="d"
-    Title="Brainrot Tracker"
-    ExtendsContentIntoTitleBar="True">
+    Title="Brainrot Tracker">
 
-    <Grid Background="Transparent">
+    <!-- Root layout with acrylic background -->
+    <Grid x:Name="TitleBarHost">
         <Grid.Background>
-            <AcrylicBrush BackgroundSource="Backdrop" TintColor="{ThemeResource LayerFillColorDefault}" TintOpacity="0.6" TintLuminosityOpacity="0.9" />
+            <!-- WinUI 3 Acrylic: NO BackgroundSource property -->
+            <media:AcrylicBrush
+                TintColor="{ThemeResource LayerFillColorDefault}"
+                TintOpacity="0.6"
+                TintLuminosityOpacity="0.9" />
         </Grid.Background>
 
         <ScrollViewer Padding="20" VerticalScrollBarVisibility="Auto">
             <StackPanel Spacing="16">
 
+                <!-- Card 1: brain state + totals -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         CornerRadius="12"
                         Padding="20"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1">
                     <StackPanel Spacing="12">
+
                         <!-- Brain state header -->
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="12">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="12">
                             <Border Background="{ThemeResource SystemFillColorSuccessBrush}"
                                     CornerRadius="12"
                                     Padding="12"
@@ -77,6 +85,7 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Card 2: category editor -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         CornerRadius="12"
                         Padding="20"
@@ -109,6 +118,7 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
+                            <!-- Rot list -->
                             <StackPanel Spacing="6">
                                 <TextBlock Text="Rot apps" FontWeight="SemiBold" />
                                 <ItemsControl x:Name="RotAppsList">
@@ -132,6 +142,7 @@
                                 </ItemsControl>
                             </StackPanel>
 
+                            <!-- Focus list -->
                             <StackPanel Grid.Column="1" Spacing="6">
                                 <TextBlock Text="Focus apps" FontWeight="SemiBold" />
                                 <ItemsControl x:Name="FocusAppsList">
@@ -155,6 +166,7 @@
                                 </ItemsControl>
                             </StackPanel>
 
+                            <!-- Neutral list -->
                             <StackPanel Grid.Column="2" Spacing="6">
                                 <TextBlock Text="Neutral apps" FontWeight="SemiBold" />
                                 <ItemsControl x:Name="NeutralAppsList">
@@ -181,6 +193,7 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Card 3: per-app usage list -->
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         CornerRadius="12"
                         Padding="20"
