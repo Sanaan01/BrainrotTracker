@@ -16,6 +16,8 @@
                         <GradientStop Color="#F6F9FF" Offset="0" />
                         <GradientStop Color="#EEF2FF" Offset="1" />
                     </LinearGradientBrush>
+                    <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="#0B1220" />
+                    <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="#4A5568" />
                     <SolidColorBrush x:Key="ProgressBarForegroundBrush" Color="#3B82F6" />
                     <SolidColorBrush x:Key="ProgressBarBackgroundBrush" Color="#E7EBF2" />
                     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFFFF" />
@@ -40,6 +42,8 @@
                         <GradientStop Color="#0F1624" Offset="0" />
                         <GradientStop Color="#0B101A" Offset="1" />
                     </LinearGradientBrush>
+                    <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="#E6ECF7" />
+                    <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="#A6B3CD" />
                     <SolidColorBrush x:Key="ProgressBarForegroundBrush" Color="#7CC2FF" />
                     <SolidColorBrush x:Key="ProgressBarBackgroundBrush" Color="#263143" />
                     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FF1C2433" />
