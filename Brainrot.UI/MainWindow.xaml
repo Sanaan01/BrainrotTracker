@@ -6,10 +6,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:Brainrot.UI"
     xmlns:ui="using:Microsoft.UI.Xaml"
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
     mc:Ignorable="d"
     Title="Brainrot Tracker"
     ExtendsContentIntoTitleBar="True">
 
+    <Grid x:Name="RootGrid"
+          Background="Transparent"
+          media:BackdropMaterial.ApplyToRootOrPageBackground="True">
     <Grid Background="Transparent">
         <Grid.Background>
             <AcrylicBrush BackgroundSource="Backdrop" TintColor="{ThemeResource LayerFillColorDefault}" TintOpacity="0.6" TintLuminosityOpacity="0.9" />
