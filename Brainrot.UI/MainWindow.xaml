@@ -13,6 +13,10 @@
     <Grid x:Name="RootGrid"
           Background="Transparent"
           ui:BackdropMaterial.ApplyToRootOrPageBackground="True">
+    <Grid Background="Transparent">
+        <Grid.Background>
+            <AcrylicBrush BackgroundSource="Backdrop" TintColor="{ThemeResource LayerFillColorDefault}" TintOpacity="0.6" TintLuminosityOpacity="0.9" />
+        </Grid.Background>
 
         <ScrollViewer Padding="20" VerticalScrollBarVisibility="Auto">
             <StackPanel Spacing="16">
