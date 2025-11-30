@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
-using Microsoft.UI.Xaml;
 using Brainrot.Core;
+using Microsoft.UI.Composition.SystemBackdrops;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 
 namespace Brainrot.UI
 {
@@ -11,11 +14,24 @@ namespace Brainrot.UI
         private readonly DispatcherTimer _timer;
         private int _tick;
 
+        private readonly ObservableCollection<string> _rotApps;
+        private readonly ObservableCollection<string> _focusApps;
+        private readonly ObservableCollection<string> _neutralApps;
+
         public MainWindow()
         {
             this.InitializeComponent();
 
+            if (MicaController.IsSupported())
+            {
+                SystemBackdrop = new MicaBackdrop();
+            }
+
             _tracker = new BrainrotTracker();
+
+            _rotApps = new ObservableCollection<string>();
+            _focusApps = new ObservableCollection<string>();
+            _neutralApps = new ObservableCollection<string>();
 
             _timer = new DispatcherTimer
             {
@@ -25,6 +41,7 @@ namespace Brainrot.UI
             _timer.Start();
 
             var snapshot = _tracker.GetSnapshot();
+            RefreshCategoryLists();
             UpdateUi(snapshot);
         }
 
@@ -69,11 +86,61 @@ namespace Brainrot.UI
                     {
                         AppName = kvp.Key,
                         Duration = FormatTime(kvp.Value),
-                        Category = "" // category not shown yet
+                        Category = string.Empty // category not shown yet
                     })
                 .ToList();
 
             AppsList.ItemsSource = rows;
+        }
+
+        private void RefreshCategoryLists()
+        {
+            ResetCollection(_rotApps, _tracker.RotApps);
+            ResetCollection(_focusApps, _tracker.FocusApps);
+            ResetCollection(_neutralApps, _tracker.NeutralApps);
+
+            RotAppsList.ItemsSource = _rotApps;
+            FocusAppsList.ItemsSource = _focusApps;
+            NeutralAppsList.ItemsSource = _neutralApps;
+        }
+
+        private static void ResetCollection(ObservableCollection<string> target, System.Collections.Generic.IEnumerable<string> items)
+        {
+            target.Clear();
+
+            foreach (var item in items.OrderBy(i => i))
+            {
+                target.Add(item);
+            }
+        }
+
+        private void AddToRot_Click(object sender, RoutedEventArgs e)
+        {
+            AddAppToCategory(UsageCategory.Rot);
+        }
+
+        private void AddToFocus_Click(object sender, RoutedEventArgs e)
+        {
+            AddAppToCategory(UsageCategory.Focus);
+        }
+
+        private void AddToNeutral_Click(object sender, RoutedEventArgs e)
+        {
+            AddAppToCategory(UsageCategory.Neutral);
+        }
+
+        private void AddAppToCategory(UsageCategory category)
+        {
+            var appName = AppNameInput.Text.Trim();
+            if (string.IsNullOrWhiteSpace(appName))
+            {
+                return;
+            }
+
+            _tracker.SetAppCategory(appName, category);
+            AppNameInput.Text = string.Empty;
+            RefreshCategoryLists();
+            UpdateUi(_tracker.GetSnapshot());
         }
 
         private static string FormatTime(int seconds)
@@ -102,9 +169,9 @@ namespace Brainrot.UI
         // Model used to populate the ListView
         private class AppUsageRow
         {
-            public string AppName { get; set; } = "";
-            public string Duration { get; set; } = "";
-            public string Category { get; set; } = "";
+            public string AppName { get; set; } = string.Empty;
+            public string Duration { get; set; } = string.Empty;
+            public string Category { get; set; } = string.Empty;
         }
     }
 }
