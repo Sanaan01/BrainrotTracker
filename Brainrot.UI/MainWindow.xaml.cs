@@ -68,6 +68,7 @@ namespace Brainrot.UI
             RotText.Text = FormatTime(snapshot.RotSeconds);
             FocusText.Text = FormatTime(snapshot.FocusSeconds);
             NeutralText.Text = FormatTime(snapshot.NeutralSeconds);
+            TotalTimeText.Text = FormatTime(snapshot.RotSeconds + snapshot.FocusSeconds + snapshot.NeutralSeconds);
 
             int rot = snapshot.RotSeconds;
             int focus = snapshot.FocusSeconds;
@@ -86,7 +87,7 @@ namespace Brainrot.UI
                 {
                     AppName = kvp.Key,
                     Duration = FormatTime(kvp.Value),
-                    Category = "" // you can wire in real category later
+                    Category = GetCategoryLabel(kvp.Key)
                 })
                 .ToList();
 
@@ -142,6 +143,16 @@ namespace Brainrot.UI
             int m = seconds / 60;
             int s = seconds % 60;
             return $"{m}m {s:00}s";
+        }
+
+        private string GetCategoryLabel(string appName)
+        {
+            return _tracker.GetAppCategory(appName) switch
+            {
+                UsageCategory.Rot => "Rot",
+                UsageCategory.Focus => "Focus",
+                _ => "Neutral"
+            };
         }
 
         private static (string Label, string Emoji) ComputeBrainState(BrainUsageSnapshot snapshot)
