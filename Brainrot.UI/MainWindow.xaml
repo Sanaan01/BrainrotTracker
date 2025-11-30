@@ -9,16 +9,6 @@
     Title="Brainrot Tracker"
     ExtendsContentIntoTitleBar="True">
 
-    <Window.Resources>
-        <!-- Local brushes to avoid SDK resource lookup failures on some installations -->
-        <SolidColorBrush x:Key="RotBrush" Color="#FFEFC4C4" />
-        <SolidColorBrush x:Key="RotStrokeBrush" Color="#FFDA8E8E" />
-        <SolidColorBrush x:Key="FocusBrush" Color="#FFC4EFD2" />
-        <SolidColorBrush x:Key="FocusStrokeBrush" Color="#FFA1DBB9" />
-        <SolidColorBrush x:Key="NeutralBrush" Color="#FFEFE3C4" />
-        <SolidColorBrush x:Key="NeutralStrokeBrush" Color="#FFD9C184" />
-    </Window.Resources>
-
     <Grid Background="Transparent">
         <ScrollViewer Padding="20" VerticalScrollBarVisibility="Auto">
             <StackPanel Spacing="16">
@@ -31,7 +21,7 @@
                     <StackPanel Spacing="12">
                         <!-- Brain state header -->
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="12">
-                            <Border Background="{StaticResource FocusBrush}"
+                            <Border Background="{ThemeResource SystemFillColorSuccessBrush}"
                                     CornerRadius="12"
                                     Padding="12"
                                     VerticalAlignment="Center">
@@ -76,7 +66,8 @@
                                          Minimum="0"
                                          Maximum="100"
                                          Value="0"
-                                         Height="8" />
+                                         Height="8"
+                                         CornerRadius="6" />
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -123,8 +114,8 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="{StaticResource RotBrush}"
-                                                    BorderBrush="{StaticResource RotStrokeBrush}"
+                                            <Border Background="{ThemeResource SystemFillColorAttentionBrush}"
+                                                    BorderBrush="{ThemeResource SystemFillColorAttentionBrush}"
                                                     BorderThickness="1"
                                                     CornerRadius="8"
                                                     Padding="8,4"
@@ -146,8 +137,8 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="{StaticResource FocusBrush}"
-                                                    BorderBrush="{StaticResource FocusStrokeBrush}"
+                                            <Border Background="{ThemeResource SystemFillColorSuccessBrush}"
+                                                    BorderBrush="{ThemeResource SystemFillColorSuccessBrush}"
                                                     BorderThickness="1"
                                                     CornerRadius="8"
                                                     Padding="8,4"
@@ -169,8 +160,8 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="{StaticResource NeutralBrush}"
-                                                    BorderBrush="{StaticResource NeutralStrokeBrush}"
+                                            <Border Background="{ThemeResource SystemFillColorCautionBrush}"
+                                                    BorderBrush="{ThemeResource SystemFillColorCautionBrush}"
                                                     BorderThickness="1"
                                                     CornerRadius="8"
                                                     Padding="8,4"
