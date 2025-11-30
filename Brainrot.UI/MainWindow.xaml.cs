@@ -5,6 +5,7 @@ using Brainrot.Core;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Windows.UI;
 
 namespace Brainrot.UI
 {
@@ -23,6 +24,7 @@ namespace Brainrot.UI
             this.InitializeComponent();
 
             ApplyBackdrop();
+            InitializeTransparentRoot();
 
             _tracker = new BrainrotTracker();
 
@@ -178,6 +180,12 @@ namespace Brainrot.UI
             {
                 SystemBackdrop = new DesktopAcrylicBackdrop();
             }
+        }
+
+        private void InitializeTransparentRoot()
+        {
+            RootGrid.Background = new SolidColorBrush(Colors.Transparent);
+            BackdropMaterial.SetApplyToRootOrPageBackground(RootGrid, true);
         }
 
         // Model used to populate the ListView
