@@ -8,66 +8,65 @@
     mc:Ignorable="d"
     Title="Brainrot Tracker">
 
-    <Grid x:Name="TitleBarHost" Background="{ThemeResource AppBackgroundBrush}" Foreground="{ThemeResource TextFillColorPrimaryBrush}">
-        <Grid.Resources>
-            <ResourceDictionary>
-                <ResourceDictionary.ThemeDictionaries>
-                    <ResourceDictionary x:Key="Light">
-                        <LinearGradientBrush x:Key="AppBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#F6F9FF" Offset="0" />
-                            <GradientStop Color="#EEF2FF" Offset="1" />
-                        </LinearGradientBrush>
-                        <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="#0B1220" />
-                        <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="#4A5568" />
-                        <SolidColorBrush x:Key="ProgressBarForegroundBrush" Color="#3B82F6" />
-                        <SolidColorBrush x:Key="ProgressBarBackgroundBrush" Color="#E7EBF2" />
-                        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFFFF" />
-                        <SolidColorBrush x:Key="CardStrokeBrush" Color="#E7EBF2" />
-                        <SolidColorBrush x:Key="FocusCardBackgroundBrush" Color="#F1F8FF" />
-                        <SolidColorBrush x:Key="FocusCardStrokeBrush" Color="#D5E7FF" />
-                        <SolidColorBrush x:Key="RotCardBackgroundBrush" Color="#FFF6F2" />
-                        <SolidColorBrush x:Key="RotCardStrokeBrush" Color="#FFE0D5" />
-                        <SolidColorBrush x:Key="NeutralCardBackgroundBrush" Color="#FEFFF6" />
-                        <SolidColorBrush x:Key="NeutralCardStrokeBrush" Color="#EEF1D2" />
-                        <SolidColorBrush x:Key="AvatarFillBrush" Color="#F7F9FF" />
-                        <SolidColorBrush x:Key="AvatarStrokeBrush" Color="#E7ECFF" />
-                        <SolidColorBrush x:Key="RotPillBackgroundBrush" Color="#FFF2EE" />
-                        <SolidColorBrush x:Key="RotPillStrokeBrush" Color="#FFDDD2" />
-                        <SolidColorBrush x:Key="FocusPillBackgroundBrush" Color="#E7F8EE" />
-                        <SolidColorBrush x:Key="FocusPillStrokeBrush" Color="#CFEADC" />
-                        <SolidColorBrush x:Key="NeutralPillBackgroundBrush" Color="#FFF8E7" />
-                        <SolidColorBrush x:Key="NeutralPillStrokeBrush" Color="#F3E7C8" />
-                    </ResourceDictionary>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <LinearGradientBrush x:Key="AppBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#F6F9FF" Offset="0" />
+                        <GradientStop Color="#EEF2FF" Offset="1" />
+                    </LinearGradientBrush>
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFFFF" />
+                    <SolidColorBrush x:Key="CardStrokeBrush" Color="#E7EBF2" />
+                    <SolidColorBrush x:Key="FocusCardBackgroundBrush" Color="#F1F8FF" />
+                    <SolidColorBrush x:Key="FocusCardStrokeBrush" Color="#D5E7FF" />
+                    <SolidColorBrush x:Key="RotCardBackgroundBrush" Color="#FFF6F2" />
+                    <SolidColorBrush x:Key="RotCardStrokeBrush" Color="#FFE0D5" />
+                    <SolidColorBrush x:Key="NeutralCardBackgroundBrush" Color="#FEFFF6" />
+                    <SolidColorBrush x:Key="NeutralCardStrokeBrush" Color="#EEF1D2" />
+                    <SolidColorBrush x:Key="AvatarFillBrush" Color="#F7F9FF" />
+                    <SolidColorBrush x:Key="AvatarStrokeBrush" Color="#E7ECFF" />
+                    <SolidColorBrush x:Key="RotPillBackgroundBrush" Color="#FFF2EE" />
+                    <SolidColorBrush x:Key="RotPillStrokeBrush" Color="#FFDDD2" />
+                    <SolidColorBrush x:Key="FocusPillBackgroundBrush" Color="#E7F8EE" />
+                    <SolidColorBrush x:Key="FocusPillStrokeBrush" Color="#CFEADC" />
+                    <SolidColorBrush x:Key="NeutralPillBackgroundBrush" Color="#FFF8E7" />
+                    <SolidColorBrush x:Key="NeutralPillStrokeBrush" Color="#F3E7C8" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <LinearGradientBrush x:Key="AppBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#0F1624" Offset="0" />
+                        <GradientStop Color="#0B101A" Offset="1" />
+                    </LinearGradientBrush>
+                    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FF1C2433" />
+                    <SolidColorBrush x:Key="CardStrokeBrush" Color="#FF2E3747" />
+                    <SolidColorBrush x:Key="FocusCardBackgroundBrush" Color="#0E2A1D" />
+                    <SolidColorBrush x:Key="FocusCardStrokeBrush" Color="#1F4D33" />
+                    <SolidColorBrush x:Key="RotCardBackgroundBrush" Color="#2B1A1C" />
+                    <SolidColorBrush x:Key="RotCardStrokeBrush" Color="#4A2A2D" />
+                    <SolidColorBrush x:Key="NeutralCardBackgroundBrush" Color="#2A2816" />
+                    <SolidColorBrush x:Key="NeutralCardStrokeBrush" Color="#4A4425" />
+                    <SolidColorBrush x:Key="AvatarFillBrush" Color="#1F2635" />
+                    <SolidColorBrush x:Key="AvatarStrokeBrush" Color="#2E3A4F" />
+                    <SolidColorBrush x:Key="RotPillBackgroundBrush" Color="#3B2326" />
+                    <SolidColorBrush x:Key="RotPillStrokeBrush" Color="#6B3A3F" />
+                    <SolidColorBrush x:Key="FocusPillBackgroundBrush" Color="#1C3A2A" />
+                    <SolidColorBrush x:Key="FocusPillStrokeBrush" Color="#2E6447" />
+                    <SolidColorBrush x:Key="NeutralPillBackgroundBrush" Color="#3A341F" />
+                    <SolidColorBrush x:Key="NeutralPillStrokeBrush" Color="#6A5E33" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 
-                    <ResourceDictionary x:Key="Dark">
-                        <LinearGradientBrush x:Key="AppBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
-                            <GradientStop Color="#0F1624" Offset="0" />
-                            <GradientStop Color="#0B101A" Offset="1" />
-                        </LinearGradientBrush>
-                        <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="#E6ECF7" />
-                        <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="#A6B3CD" />
-                        <SolidColorBrush x:Key="ProgressBarForegroundBrush" Color="#7CC2FF" />
-                        <SolidColorBrush x:Key="ProgressBarBackgroundBrush" Color="#263143" />
-                        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FF1C2433" />
-                        <SolidColorBrush x:Key="CardStrokeBrush" Color="#FF2E3747" />
-                        <SolidColorBrush x:Key="FocusCardBackgroundBrush" Color="#0E2A1D" />
-                        <SolidColorBrush x:Key="FocusCardStrokeBrush" Color="#1F4D33" />
-                        <SolidColorBrush x:Key="RotCardBackgroundBrush" Color="#2B1A1C" />
-                        <SolidColorBrush x:Key="RotCardStrokeBrush" Color="#4A2A2D" />
-                        <SolidColorBrush x:Key="NeutralCardBackgroundBrush" Color="#2A2816" />
-                        <SolidColorBrush x:Key="NeutralCardStrokeBrush" Color="#4A4425" />
-                        <SolidColorBrush x:Key="AvatarFillBrush" Color="#1F2635" />
-                        <SolidColorBrush x:Key="AvatarStrokeBrush" Color="#2E3A4F" />
-                        <SolidColorBrush x:Key="RotPillBackgroundBrush" Color="#3B2326" />
-                        <SolidColorBrush x:Key="RotPillStrokeBrush" Color="#6B3A3F" />
-                        <SolidColorBrush x:Key="FocusPillBackgroundBrush" Color="#1C3A2A" />
-                        <SolidColorBrush x:Key="FocusPillStrokeBrush" Color="#2E6447" />
-                        <SolidColorBrush x:Key="NeutralPillBackgroundBrush" Color="#3A341F" />
-                        <SolidColorBrush x:Key="NeutralPillStrokeBrush" Color="#6A5E33" />
-                    </ResourceDictionary>
-                </ResourceDictionary.ThemeDictionaries>
-            </ResourceDictionary>
-        </Grid.Resources>
+    <Grid x:Name="TitleBarHost" Background="{ThemeResource AppBackgroundBrush}">
+    <Grid x:Name="TitleBarHost">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#F6F9FF" Offset="0" />
+                <GradientStop Color="#EEF2FF" Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
 
         <ScrollViewer Padding="24" VerticalScrollBarVisibility="Auto">
             <StackPanel Spacing="16">
@@ -90,6 +89,7 @@
                     <!-- Summary cards -->
                     <StackPanel Spacing="10">
                         <Border Background="{ThemeResource CardBackgroundBrush}" Padding="16" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                        <Border Background="#FFFFFF" Padding="16" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
                             <StackPanel Spacing="4">
                                 <TextBlock Text="Total Active Time" FontWeight="SemiBold" />
                                 <TextBlock x:Name="TotalTimeText"
@@ -107,6 +107,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Border Background="{ThemeResource FocusCardBackgroundBrush}" CornerRadius="14" Padding="12" BorderBrush="{ThemeResource FocusCardStrokeBrush}" BorderThickness="1">
+                            <Border Background="#F1F8FF" CornerRadius="14" Padding="12" BorderBrush="#D5E7FF" BorderThickness="1">
                                 <StackPanel>
                                     <TextBlock Text="Focus Time" FontWeight="SemiBold" />
                                     <TextBlock x:Name="FocusText" Text="0m 00s" FontSize="20" FontWeight="SemiBold" />
@@ -115,6 +116,7 @@
                             </Border>
 
                             <Border Grid.Column="1" Background="{ThemeResource RotCardBackgroundBrush}" CornerRadius="14" Padding="12" BorderBrush="{ThemeResource RotCardStrokeBrush}" BorderThickness="1">
+                            <Border Grid.Column="1" Background="#FFF6F2" CornerRadius="14" Padding="12" BorderBrush="#FFE0D5" BorderThickness="1">
                                 <StackPanel>
                                     <TextBlock Text="Rot Time" FontWeight="SemiBold" />
                                     <TextBlock x:Name="RotText" Text="0m 00s" FontSize="20" FontWeight="SemiBold" />
@@ -124,42 +126,57 @@
                         </Grid>
 
                         <Border Background="{ThemeResource NeutralCardBackgroundBrush}" CornerRadius="14" Padding="12" BorderBrush="{ThemeResource NeutralCardStrokeBrush}" BorderThickness="1">
-                            <Grid ColumnSpacing="10">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Width="60" Height="60" Background="{ThemeResource AvatarFillBrush}" CornerRadius="12" BorderBrush="{ThemeResource AvatarStrokeBrush}" BorderThickness="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-
-                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <TextBlock x:Name="EmojiText" Text="😵" FontSize="24" />
-                                    </StackPanel>
-                                </Grid>
-
-                                <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
-                                    <TextBlock Text="Brain Health" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                    <TextBlock x:Name="BrainStateText" Text="Full brainrot" FontSize="26" FontWeight="SemiBold" />
-                                    <TextBlock x:Name="FocusVsRotLabel" Text="0% focus" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                    <ProgressBar x:Name="FocusVsRotBar"
-                                                 Minimum="0"
-                                                 Maximum="100"
-                                                 Value="0"
-                                                 Height="10"
-                                                 CornerRadius="8"
-                                                 Foreground="{ThemeResource ProgressBarForegroundBrush}"
-                                                 Background="{ThemeResource ProgressBarBackgroundBrush}" />
-                                </StackPanel>
-                            </Grid>
+                        <Border Background="#FEFFF6" CornerRadius="14" Padding="12" BorderBrush="#EEF1D2" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="Neutral Time" FontWeight="SemiBold" />
+                                <TextBlock x:Name="NeutralText" Text="0m 00s" FontSize="20" FontWeight="SemiBold" />
+                                <TextBlock Text="Meetings, idle, misc." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
                         </Border>
                     </StackPanel>
 
+                    <!-- Brain health card -->
+                    <Border Grid.Column="1" Background="{ThemeResource CardBackgroundBrush}" Padding="20" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                    <Border Grid.Column="1" Background="#FFFFFF" Padding="20" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Width="140" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
+                                <Ellipse Width="120" Height="120" Fill="{ThemeResource AvatarFillBrush}" Stroke="{ThemeResource AvatarStrokeBrush}" StrokeThickness="2" />
+                                <Ellipse Width="120" Height="120" Fill="#F7F9FF" Stroke="#E7ECFF" StrokeThickness="2" />
+                                <TextBlock x:Name="EmojiText" Text="💀" FontSize="28" HorizontalAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+                                <TextBlock Text="Brain Health" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <TextBlock x:Name="BrainStateText" Text="Full brainrot" FontSize="26" FontWeight="SemiBold" />
+                                <TextBlock x:Name="FocusVsRotLabel" Text="0% focus" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <ProgressBar x:Name="FocusVsRotBar"
+                                             Minimum="0"
+                                             Maximum="100"
+                                             Value="0"
+                                             Height="10"
+                                             CornerRadius="8" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
                     <!-- Quick categorize -->
                     <Border Grid.Column="2" Background="{ThemeResource CardBackgroundBrush}" Padding="18" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Quick Categorize" FontSize="18" FontWeight="SemiBold" />
+                            <TextBlock Text="Drop in a process name and tag it so the tracker stays accurate." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                            <TextBox x:Name="AppNameInput"
+                                     PlaceholderText="e.g. chrome"
+                                     Header="Process name"
+                                     Margin="0,4,0,0" />
+
+
+                    <!-- Quick categorize -->
+                    <Border Grid.Column="2" Background="#FFFFFF" Padding="18" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
                         <StackPanel Spacing="12">
                             <TextBlock Text="Quick Categorize" FontSize="18" FontWeight="SemiBold" />
                             <TextBlock Text="Drop in a process name and tag it so the tracker stays accurate." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
@@ -190,6 +207,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Border Background="{ThemeResource CardBackgroundBrush}" Padding="18" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                    <Border Background="#FFFFFF" Padding="18" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
                         <StackPanel Spacing="12">
                             <TextBlock Text="Category breakdown" FontSize="18" FontWeight="SemiBold" />
                             <TextBlock Text="Manage the lists that define your rot, focus, and neutral apps." FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
@@ -214,11 +232,13 @@
                                             <DataTemplate>
                                                 <Border Background="{ThemeResource RotPillBackgroundBrush}"
                                                         BorderBrush="{ThemeResource RotPillStrokeBrush}"
+                                                <Border Background="#FFF2EE"
+                                                        BorderBrush="#FFDDD2"
                                                         BorderThickness="1"
                                                         CornerRadius="8"
                                                         Padding="10,6"
                                                         Margin="0,0,0,6">
-                                                    <TextBlock Text="{Binding}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                                                    <TextBlock Text="{Binding}" />
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -238,11 +258,13 @@
                                             <DataTemplate>
                                                 <Border Background="{ThemeResource FocusPillBackgroundBrush}"
                                                         BorderBrush="{ThemeResource FocusPillStrokeBrush}"
+                                                <Border Background="#E7F8EE"
+                                                        BorderBrush="#CFEADC"
                                                         BorderThickness="1"
                                                         CornerRadius="8"
                                                         Padding="10,6"
                                                         Margin="0,0,0,6">
-                                                    <TextBlock Text="{Binding}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                                                    <TextBlock Text="{Binding}" />
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -262,11 +284,13 @@
                                             <DataTemplate>
                                                 <Border Background="{ThemeResource NeutralPillBackgroundBrush}"
                                                         BorderBrush="{ThemeResource NeutralPillStrokeBrush}"
+                                                <Border Background="#FFF8E7"
+                                                        BorderBrush="#F3E7C8"
                                                         BorderThickness="1"
                                                         CornerRadius="8"
                                                         Padding="10,6"
                                                         Margin="0,0,0,6">
-                                                    <TextBlock Text="{Binding}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                                                    <TextBlock Text="{Binding}" />
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -277,6 +301,7 @@
                     </Border>
 
                     <Border Grid.Column="1" Background="{ThemeResource CardBackgroundBrush}" Padding="18" CornerRadius="16" BorderBrush="{ThemeResource CardStrokeBrush}" BorderThickness="1">
+                    <Border Grid.Column="1" Background="#FFFFFF" Padding="18" CornerRadius="16" BorderBrush="#E7EBF2" BorderThickness="1">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
