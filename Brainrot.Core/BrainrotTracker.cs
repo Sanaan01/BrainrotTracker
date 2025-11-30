@@ -10,6 +10,7 @@ namespace Brainrot.Core
     {
         private readonly HashSet<string> _rotApps;
         private readonly HashSet<string> _focusApps;
+        private readonly HashSet<string> _neutralApps;
         private readonly IUsageRepository _usageRepository;
 
         private Dictionary<string, int> _perAppSeconds;
@@ -46,6 +47,8 @@ namespace Brainrot.Core
                 "notepad",
                 "Notion"
             };
+
+            _neutralApps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             _usageRepository = usageRepository ?? new LiteDbUsageRepository();
 
@@ -116,11 +119,45 @@ namespace Brainrot.Core
             );
         }
 
+        public IReadOnlyCollection<string> RotApps => _rotApps;
+
+        public IReadOnlyCollection<string> FocusApps => _focusApps;
+
+        public IReadOnlyCollection<string> NeutralApps => _neutralApps;
+
         public IEnumerable<KeyValuePair<string, int>> GetTopApps(int count = 10)
         {
             return _perAppSeconds
                 .OrderByDescending(kvp => kvp.Value)
                 .Take(count);
+        }
+
+        public void SetAppCategory(string appName, UsageCategory category)
+        {
+            if (string.IsNullOrWhiteSpace(appName))
+            {
+                return;
+            }
+
+            var normalized = appName.Trim();
+
+            // Remove from all buckets before re-adding
+            _rotApps.Remove(normalized);
+            _focusApps.Remove(normalized);
+            _neutralApps.Remove(normalized);
+
+            switch (category)
+            {
+                case UsageCategory.Rot:
+                    _rotApps.Add(normalized);
+                    break;
+                case UsageCategory.Focus:
+                    _focusApps.Add(normalized);
+                    break;
+                case UsageCategory.Neutral:
+                    _neutralApps.Add(normalized);
+                    break;
+            }
         }
 
         private void EnsureCurrentDate()
