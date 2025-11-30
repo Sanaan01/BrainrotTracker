@@ -5,6 +5,7 @@ using Brainrot.Core;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Windows.UI;
 
 namespace Brainrot.UI
 {
@@ -22,10 +23,8 @@ namespace Brainrot.UI
         {
             this.InitializeComponent();
 
-            if (MicaController.IsSupported())
-            {
-                SystemBackdrop = new MicaBackdrop();
-            }
+            ApplyBackdrop();
+            InitializeTransparentRoot();
 
             _tracker = new BrainrotTracker();
 
@@ -131,7 +130,7 @@ namespace Brainrot.UI
 
         private void AddAppToCategory(UsageCategory category)
         {
-            var appName = AppNameInput.Text.Trim();
+            var appName = AppNameInput.Text?.Trim();
             if (string.IsNullOrWhiteSpace(appName))
             {
                 return;
@@ -164,6 +163,29 @@ namespace Brainrot.UI
             if (focusRatio < 0.50) return ("Struggling", "😵");
             if (focusRatio < 0.80) return ("Mixed", "😐");
             return ("Locked in", "🧠");
+        }
+
+        private void ApplyBackdrop()
+        {
+            if (MicaController.IsSupported())
+            {
+                SystemBackdrop = new MicaBackdrop
+                {
+                    Kind = MicaKind.BaseAlt
+                };
+                return;
+            }
+
+            if (DesktopAcrylicBackdrop.IsSupported())
+            {
+                SystemBackdrop = new DesktopAcrylicBackdrop();
+            }
+        }
+
+        private void InitializeTransparentRoot()
+        {
+            RootGrid.Background = new SolidColorBrush(Colors.Transparent);
+            BackdropMaterial.SetApplyToRootOrPageBackground(RootGrid, true);
         }
 
         // Model used to populate the ListView
