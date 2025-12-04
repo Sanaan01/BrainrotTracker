@@ -8,9 +8,12 @@ namespace Brainrot.Core
 {
     public sealed class BrainrotTracker
     {
+        private const int AutoAddThresholdSeconds = 5;
+
         private readonly HashSet<string> _rotApps;
         private readonly HashSet<string> _focusApps;
         private readonly HashSet<string> _neutralApps;
+        private readonly HashSet<string> _ignoredApps;
         private readonly IUsageRepository _usageRepository;
 
         private Dictionary<string, int> _perAppSeconds;
@@ -49,6 +52,20 @@ namespace Brainrot.Core
             };
 
             _neutralApps = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            _ignoredApps = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "ApplicationFrameHost",
+                "ShellExperienceHost",
+                "RuntimeBroker",
+                "SearchHost",
+                "dllhost",
+                "sihost",
+                "ctfmon",
+                "TextInputHost",
+                "SystemSettings",
+                "Idle",
+                "explorer" // omit shell by default to avoid noise
+            };
 
             _usageRepository = usageRepository ?? new LiteDbUsageRepository();
 
@@ -58,31 +75,53 @@ namespace Brainrot.Core
             _focusSeconds = snapshot.FocusSeconds;
             _neutralSeconds = snapshot.NeutralSeconds;
             _perAppSeconds = new Dictionary<string, int>(snapshot.PerAppSeconds, StringComparer.OrdinalIgnoreCase);
+
+            // Restore persisted category choices
+            var persisted = _usageRepository.LoadCategories();
+            foreach (var kvp in persisted)
+            {
+                var name = kvp.Key;
+                switch (kvp.Value)
+                {
+                    case UsageCategory.Rot:
+                        _rotApps.Add(name);
+                        break;
+                    case UsageCategory.Focus:
+                        _focusApps.Add(name);
+                        break;
+                    case UsageCategory.Neutral:
+                        _neutralApps.Add(name);
+                        break;
+                }
+            }
         }
 
         /// <summary>
-        /// Call this once per second.
+        /// Call this once per second. Returns true if we surfaced a new app into the category lists.
         /// </summary>
-        public void Tick()
+        public bool Tick()
         {
             EnsureCurrentDate();
 
             var processName = NativeMethods.GetActiveProcessName();
             if (string.IsNullOrWhiteSpace(processName))
-                return;
+                return false;
 
             // Ignore our own tracker window so it doesn't show up in stats
             if (string.Equals(processName, _selfProcessName, StringComparison.OrdinalIgnoreCase))
-                return;
+                return false;
 
+            // Ignore noisy system/host processes
+            if (_ignoredApps.Contains(processName))
+                return false;
 
-            if (!_perAppSeconds.TryGetValue(processName, out var seconds))
-            {
+            var isNewInUsage = !_perAppSeconds.TryGetValue(processName, out var seconds);
+            if (isNewInUsage)
                 seconds = 0;
-            }
 
             _perAppSeconds[processName] = seconds + 1;
 
+            bool addedToCategories = false;
             UsageCategory category;
             if (_rotApps.Contains(processName))
             {
@@ -98,6 +137,17 @@ namespace Brainrot.Core
             {
                 category = UsageCategory.Neutral;
                 _neutralSeconds++;
+
+                // Automatically track apps not in any list as Neutral so they appear immediately.
+                if (!_neutralApps.Contains(processName)
+                    && !_rotApps.Contains(processName)
+                    && !_focusApps.Contains(processName)
+                    && _perAppSeconds[processName] >= AutoAddThresholdSeconds)
+                {
+                    _neutralApps.Add(processName);
+                    _usageRepository.SaveCategory(processName, UsageCategory.Neutral);
+                    addedToCategories = true;
+                }
             }
 
             _usageRepository.AppendUsage(new UsageEntry
@@ -107,6 +157,9 @@ namespace Brainrot.Core
                 Category = category,
                 DurationSeconds = 1
             });
+
+            // Trigger immediate UI refresh if we just surfaced this app in the category lists.
+            return addedToCategories;
         }
 
         public BrainUsageSnapshot GetSnapshot()
@@ -175,12 +228,15 @@ namespace Brainrot.Core
             {
                 case UsageCategory.Rot:
                     _rotApps.Add(normalized);
+                    _usageRepository.SaveCategory(normalized, UsageCategory.Rot);
                     break;
                 case UsageCategory.Focus:
                     _focusApps.Add(normalized);
+                    _usageRepository.SaveCategory(normalized, UsageCategory.Focus);
                     break;
                 case UsageCategory.Neutral:
                     _neutralApps.Add(normalized);
+                    _usageRepository.SaveCategory(normalized, UsageCategory.Neutral);
                     break;
             }
         }

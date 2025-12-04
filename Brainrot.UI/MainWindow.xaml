@@ -8,12 +8,13 @@
     mc:Ignorable="d"
     Title="Brainrot Tracker">
 
-    <Grid Background="{ThemeResource AppBackgroundBrush}">
-        <!-- custom button template lives here, NOT on <Window> -->
-        <Grid.Resources>
-            <Style x:Key="QuickCategoryButtonStyle" TargetType="Button">
-                <Setter Property="Padding" Value="12,8" />
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Grid Background="{ThemeResource AppBackgroundBrush}">
+            <!-- custom button template lives here, NOT on <Window> -->
+            <Grid.Resources>
+                <local:AppIconConverter x:Key="AppIconConverter" />
+                <Style x:Key="QuickCategoryButtonStyle" TargetType="Button">
+                    <Setter Property="Padding" Value="12,8" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
@@ -222,13 +223,20 @@
                                     CornerRadius="10"
                                     Padding="12"
                                     Visibility="Collapsed">
-                                <StackPanel>
-                                    <TextBlock x:Name="SelectedAppNameText"
-                                               FontWeight="SemiBold"
-                                               FontSize="14" />
-                                    <TextBlock x:Name="SelectedAppDurationText"
-                                               FontSize="11"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                    <Image x:Name="SelectedAppIcon"
+                                           Width="28"
+                                           Height="28"
+                                           Stretch="UniformToFill"
+                                           Margin="0,0,4,0" />
+                                    <StackPanel>
+                                        <TextBlock x:Name="SelectedAppNameText"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="14" />
+                                        <TextBlock x:Name="SelectedAppDurationText"
+                                                   FontSize="11"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
                                 </StackPanel>
                             </Border>
 
@@ -332,7 +340,13 @@
                                                         Tapped="CategoryBreakdownItem_Tapped"
                                                         PointerEntered="CategoryBreakdownItem_PointerEntered"
                                                         PointerExited="CategoryBreakdownItem_PointerExited">
-                                                    <TextBlock Text="{Binding}" />
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <Image Width="18"
+                                                               Height="18"
+                                                               Source="{Binding Converter={StaticResource AppIconConverter}}"
+                                                               Stretch="UniformToFill" />
+                                                        <TextBlock Text="{Binding}" />
+                                                    </StackPanel>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -359,7 +373,13 @@
                                                         Tapped="CategoryBreakdownItem_Tapped"
                                                         PointerEntered="CategoryBreakdownItem_PointerEntered"
                                                         PointerExited="CategoryBreakdownItem_PointerExited">
-                                                    <TextBlock Text="{Binding}" />
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <Image Width="18"
+                                                               Height="18"
+                                                               Source="{Binding Converter={StaticResource AppIconConverter}}"
+                                                               Stretch="UniformToFill" />
+                                                        <TextBlock Text="{Binding}" />
+                                                    </StackPanel>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -386,7 +406,13 @@
                                                         Tapped="CategoryBreakdownItem_Tapped"
                                                         PointerEntered="CategoryBreakdownItem_PointerEntered"
                                                         PointerExited="CategoryBreakdownItem_PointerExited">
-                                                    <TextBlock Text="{Binding}" />
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <Image Width="18"
+                                                               Height="18"
+                                                               Source="{Binding Converter={StaticResource AppIconConverter}}"
+                                                               Stretch="UniformToFill" />
+                                                        <TextBlock Text="{Binding}" />
+                                                    </StackPanel>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>

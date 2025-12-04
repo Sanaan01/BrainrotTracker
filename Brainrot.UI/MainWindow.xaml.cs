@@ -55,10 +55,18 @@ namespace Brainrot.UI
 
         private void OnTimerTick(object sender, object e)
         {
-            _tracker.Tick();
+            bool refreshNow = _tracker.Tick();
             _tick++;
 
-            // Refresh UI every 5 seconds to avoid flicker
+            // If we just discovered a brand-new app, refresh immediately so it shows up.
+            if (refreshNow)
+            {
+                var snapshot = _tracker.GetSnapshot();
+                UpdateUi(snapshot);
+                return;
+            }
+
+            // Otherwise refresh UI every 5 seconds to avoid flicker
             if (_tick % 5 == 0)
             {
                 var snapshot = _tracker.GetSnapshot();
@@ -69,6 +77,9 @@ namespace Brainrot.UI
         private void UpdateUi(BrainUsageSnapshot snapshot)
         {
             _lastSnapshot = snapshot;
+
+            // Keep category lists in sync with any newly discovered apps (default Neutral).
+            RefreshCategoryLists();
 
             var state = ComputeBrainState(snapshot);
             BrainStateText.Text = state.Label;
@@ -142,6 +153,7 @@ namespace Brainrot.UI
             SelectedAppCard.Background = bgBrush;
             SelectedAppCard.BorderBrush = strokeBrush;
             SelectedAppNameText.Text = appName;
+            SelectedAppIcon.Source = ProcessIconProvider.GetIcon(appName);
 
             if (_lastSnapshot != null &&
                 _lastSnapshot.PerAppSeconds.TryGetValue(appName, out var seconds))
