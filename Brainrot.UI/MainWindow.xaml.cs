@@ -2,9 +2,13 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Brainrot.Core;
+using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Windows.UI;
 
 namespace Brainrot.UI
 {
@@ -17,6 +21,9 @@ namespace Brainrot.UI
         private readonly ObservableCollection<string> _rotApps;
         private readonly ObservableCollection<string> _focusApps;
         private readonly ObservableCollection<string> _neutralApps;
+
+        private string _selectedAppName = null;
+        private BrainUsageSnapshot _lastSnapshot;
 
         public MainWindow()
         {
@@ -61,6 +68,8 @@ namespace Brainrot.UI
 
         private void UpdateUi(BrainUsageSnapshot snapshot)
         {
+            _lastSnapshot = snapshot;
+
             var state = ComputeBrainState(snapshot);
             BrainStateText.Text = state.Label;
             EmojiText.Text = state.Emoji;
@@ -116,27 +125,172 @@ namespace Brainrot.UI
             }
         }
 
-        private void AddToRot_Click(object sender, RoutedEventArgs e)
-            => AddAppToCategory(UsageCategory.Rot);
+        // ========= Selection / Quick Categorize =========
 
-        private void AddToFocus_Click(object sender, RoutedEventArgs e)
-            => AddAppToCategory(UsageCategory.Focus);
-
-        private void AddToNeutral_Click(object sender, RoutedEventArgs e)
-            => AddAppToCategory(UsageCategory.Neutral);
-
-        private void AddAppToCategory(UsageCategory category)
+        // Centralised: select an app and show it in Quick Categorize
+        private void SelectApp(string appName)
         {
-            var appName = AppNameInput.Text?.Trim();
-            if (string.IsNullOrWhiteSpace(appName))
+            if (string.IsNullOrEmpty(appName))
                 return;
 
-            _tracker.SetAppCategory(appName, category);
-            AppNameInput.Text = string.Empty;
+            _selectedAppName = appName;
 
-            RefreshCategoryLists();
-            UpdateUi(_tracker.GetSnapshot());
+            var usageCategory = _tracker.GetAppCategory(appName);
+            var categoryLabel = GetCategoryLabel(appName);
+            var (bgBrush, strokeBrush) = GetCategoryBrushes(usageCategory);
+
+            SelectedAppCard.Background = bgBrush;
+            SelectedAppCard.BorderBrush = strokeBrush;
+            SelectedAppNameText.Text = appName;
+
+            if (_lastSnapshot != null &&
+                _lastSnapshot.PerAppSeconds.TryGetValue(appName, out var seconds))
+            {
+                SelectedAppDurationText.Text = FormatTime(seconds);
+            }
+            else
+            {
+                SelectedAppDurationText.Text = "No usage yet";
+            }
+
+            SelectedAppCard.Visibility = Visibility.Visible;
+
+            CategoryStatusText.Text = $"Selected: {appName} ({categoryLabel})";
+
+            FocusButton.IsEnabled = true;
+            NeutralButton.IsEnabled = true;
+            RotButton.IsEnabled = true;
         }
+
+        // Tapped on any pill in Category breakdown
+        private void CategoryBreakdownItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (sender is FrameworkElement fe && fe.DataContext is string appName)
+            {
+                SelectApp(appName);
+            }
+        }
+
+        // ========= Hover / Glow =========
+
+        // hover glow for category breakdown pills
+        private void CategoryBreakdownItem_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is Border border)
+            {
+                if (border.Tag == null)
+                {
+                    border.Tag = border.Background;
+                }
+
+                if (border.Background is SolidColorBrush scb)
+                {
+                    border.Background = new SolidColorBrush(LightenColor(scb.Color, 0.15));
+                }
+
+                border.Opacity = 0.98;
+            }
+        }
+
+        private void CategoryBreakdownItem_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is Border border)
+            {
+                if (border.Tag is Brush original)
+                {
+                    border.Background = original;
+                }
+
+                border.Opacity = 1.0;
+            }
+        }
+
+        // hover glow for Focus / Neutral / Rot buttons
+        private void QuickCategoryButton_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                if (button.Tag == null)
+                {
+                    button.Tag = button.Background;
+                }
+
+                if (button.Background is SolidColorBrush scb)
+                {
+                    button.Background = new SolidColorBrush(LightenColor(scb.Color, 0.15));
+                }
+
+                button.Opacity = 0.98;
+            }
+        }
+
+        private void QuickCategoryButton_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                if (button.Tag is Brush original)
+                {
+                    button.Background = original;
+                }
+
+                button.Opacity = 1.0;
+            }
+        }
+
+        private static Color LightenColor(Color color, double amount)
+        {
+            amount = Math.Clamp(amount, 0, 1);
+            byte r = (byte)Math.Min(255, color.R + 255 * amount);
+            byte g = (byte)Math.Min(255, color.G + 255 * amount);
+            byte b = (byte)Math.Min(255, color.B + 255 * amount);
+            return Color.FromArgb(color.A, r, g, b);
+        }
+
+        // ========= Category buttons =========
+
+        private void CategoryButton_Focus(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_selectedAppName))
+            {
+                _tracker.SetAppCategory(_selectedAppName, UsageCategory.Focus);
+                RefreshAfterCategorization();
+            }
+        }
+
+        private void CategoryButton_Neutral(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_selectedAppName))
+            {
+                _tracker.SetAppCategory(_selectedAppName, UsageCategory.Neutral);
+                RefreshAfterCategorization();
+            }
+        }
+
+        private void CategoryButton_Rot(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_selectedAppName))
+            {
+                _tracker.SetAppCategory(_selectedAppName, UsageCategory.Rot);
+                RefreshAfterCategorization();
+            }
+        }
+
+        private void RefreshAfterCategorization()
+        {
+            RefreshCategoryLists();
+            var snapshot = _tracker.GetSnapshot();
+            UpdateUi(snapshot);
+
+            CategoryStatusText.Text = $"✓ Categorized {_selectedAppName}";
+            _selectedAppName = null;
+
+            FocusButton.IsEnabled = false;
+            NeutralButton.IsEnabled = false;
+            RotButton.IsEnabled = false;
+            SelectedAppCard.Visibility = Visibility.Collapsed;
+        }
+
+        // ========= Helpers =========
 
         private static string FormatTime(int seconds)
         {
@@ -152,6 +306,25 @@ namespace Brainrot.UI
                 UsageCategory.Rot => "Rot",
                 UsageCategory.Focus => "Focus",
                 _ => "Neutral"
+            };
+        }
+
+        private (Brush Background, Brush Stroke) GetCategoryBrushes(UsageCategory category)
+        {
+            return category switch
+            {
+                UsageCategory.Focus => (
+                    (Brush)Application.Current.Resources["FocusPillBackgroundBrush"],
+                    (Brush)Application.Current.Resources["FocusPillStrokeBrush"]
+                ),
+                UsageCategory.Rot => (
+                    (Brush)Application.Current.Resources["RotPillBackgroundBrush"],
+                    (Brush)Application.Current.Resources["RotPillStrokeBrush"]
+                ),
+                _ => (
+                    (Brush)Application.Current.Resources["NeutralPillBackgroundBrush"],
+                    (Brush)Application.Current.Resources["NeutralPillStrokeBrush"]
+                )
             };
         }
 
