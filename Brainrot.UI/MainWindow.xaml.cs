@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Brainrot.Core;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
@@ -14,9 +15,10 @@ namespace Brainrot.UI
 {
     public sealed partial class MainWindow : Window
     {
-        private readonly BrainrotTracker _tracker;
+        private BrainrotTracker? _tracker;
         private readonly DispatcherTimer _timer;
         private int _tick;
+        private bool _isLoading;
 
         private readonly ObservableCollection<string> _rotApps;
         private readonly ObservableCollection<string> _focusApps;
@@ -35,26 +37,65 @@ namespace Brainrot.UI
 
             ApplyBackdrop();
 
-            _tracker = new BrainrotTracker();
-
             _rotApps = new ObservableCollection<string>();
             _focusApps = new ObservableCollection<string>();
             _neutralApps = new ObservableCollection<string>();
 
+            _isLoading = true;
             _timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(1)
             };
             _timer.Tick += OnTimerTick;
-            _timer.Start();
 
-            var snapshot = _tracker.GetSnapshot();
-            RefreshCategoryLists();
-            UpdateUi(snapshot);
+            CategoryStatusText.Text = "Loading data...";
+            FocusButton.IsEnabled = false;
+            NeutralButton.IsEnabled = false;
+            RotButton.IsEnabled = false;
+
+            ShowLoading("Loading data...");
+
+            if (Content is FrameworkElement root)
+            {
+                root.Loaded += MainWindow_Loaded;
+            }
+            else
+            {
+                // Fallback: run init immediately if content is unavailable
+                _ = InitializeAsync();
+            }
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            await InitializeAsync();
+        }
+
+        private async Task InitializeAsync()
+        {
+            try
+            {
+                _tracker = await Task.Run(() => new BrainrotTracker());
+                var snapshot = await Task.Run(() => _tracker.GetSnapshot());
+                RefreshCategoryLists();
+                UpdateUi(snapshot);
+                _timer.Start();
+            }
+            catch
+            {
+                CategoryStatusText.Text = "Failed to load data";
+            }
+            finally
+            {
+                HideLoading();
+            }
         }
 
         private void OnTimerTick(object sender, object e)
         {
+            if (_tracker == null)
+                return;
+
             bool refreshNow = _tracker.Tick();
             _tick++;
 
@@ -116,6 +157,9 @@ namespace Brainrot.UI
 
         private void RefreshCategoryLists()
         {
+            if (_tracker == null)
+                return;
+
             ResetCollection(_rotApps, _tracker.RotApps);
             ResetCollection(_focusApps, _tracker.FocusApps);
             ResetCollection(_neutralApps, _tracker.NeutralApps);
@@ -142,6 +186,9 @@ namespace Brainrot.UI
         private void SelectApp(string appName)
         {
             if (string.IsNullOrEmpty(appName))
+                return;
+
+            if (_tracker == null || _isLoading)
                 return;
 
             _selectedAppName = appName;
@@ -258,13 +305,26 @@ namespace Brainrot.UI
             return Color.FromArgb(color.A, r, g, b);
         }
 
+        private void ShowLoading(string message)
+        {
+            _isLoading = true;
+            LoadingOverlay.Visibility = Visibility.Visible;
+            LoadingStatusText.Text = message;
+        }
+
+        private void HideLoading()
+        {
+            _isLoading = false;
+            LoadingOverlay.Visibility = Visibility.Collapsed;
+        }
+
         // ========= Category buttons =========
 
         private void CategoryButton_Focus(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(_selectedAppName))
             {
-                _tracker.SetAppCategory(_selectedAppName, UsageCategory.Focus);
+                _tracker?.SetAppCategory(_selectedAppName, UsageCategory.Focus);
                 RefreshAfterCategorization();
             }
         }
@@ -273,7 +333,7 @@ namespace Brainrot.UI
         {
             if (!string.IsNullOrEmpty(_selectedAppName))
             {
-                _tracker.SetAppCategory(_selectedAppName, UsageCategory.Neutral);
+                _tracker?.SetAppCategory(_selectedAppName, UsageCategory.Neutral);
                 RefreshAfterCategorization();
             }
         }
@@ -282,7 +342,7 @@ namespace Brainrot.UI
         {
             if (!string.IsNullOrEmpty(_selectedAppName))
             {
-                _tracker.SetAppCategory(_selectedAppName, UsageCategory.Rot);
+                _tracker?.SetAppCategory(_selectedAppName, UsageCategory.Rot);
                 RefreshAfterCategorization();
             }
         }
@@ -290,8 +350,11 @@ namespace Brainrot.UI
         private void RefreshAfterCategorization()
         {
             RefreshCategoryLists();
-            var snapshot = _tracker.GetSnapshot();
-            UpdateUi(snapshot);
+            var snapshot = _tracker?.GetSnapshot();
+            if (snapshot != null)
+            {
+                UpdateUi(snapshot);
+            }
 
             CategoryStatusText.Text = $"✓ Categorized {_selectedAppName}";
             _selectedAppName = null;
@@ -313,6 +376,11 @@ namespace Brainrot.UI
 
         private string GetCategoryLabel(string appName)
         {
+            if (_tracker == null)
+            {
+                return "Neutral";
+            }
+
             return _tracker.GetAppCategory(appName) switch
             {
                 UsageCategory.Rot => "Rot",

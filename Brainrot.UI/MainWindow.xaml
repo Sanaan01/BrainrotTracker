@@ -8,8 +8,8 @@
     mc:Ignorable="d"
     Title="Brainrot Tracker">
 
-        <Grid Background="{ThemeResource AppBackgroundBrush}">
-            <!-- custom button template lives here, NOT on <Window> -->
+    <Grid Background="{ThemeResource AppBackgroundBrush}">
+        <!-- custom button template lives here, NOT on <Window> -->
             <Grid.Resources>
                 <local:AppIconConverter x:Key="AppIconConverter" />
                 <Style x:Key="QuickCategoryButtonStyle" TargetType="Button">
@@ -483,5 +483,28 @@
                 </Grid>
             </StackPanel>
         </ScrollViewer>
+
+        <!-- Loading overlay -->
+        <Grid x:Name="LoadingOverlay"
+              Grid.RowSpan="2"
+              Background="#CC0B0B0F"
+              Visibility="Collapsed">
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="16">
+                <TextBlock Text="Loading Brainrot data"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center" />
+                <TextBlock x:Name="LoadingStatusText"
+                           Text="Preparing..."
+                           HorizontalAlignment="Center"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <ProgressBar IsIndeterminate="True"
+                             Width="320"
+                             Height="10"
+                             CornerRadius="8" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
