@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PlatformTarget>x86</PlatformTarget>
+    <ComVisible>true</ComVisible>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <EnableComHosting>true</EnableComHosting>
+    <AssemblyTitle>Brainrot Tracker DeskBand</AssemblyTitle>
+    <Description>Brainrot Tracker taskbar widget</Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>DESKBAND_WPF</DefineConstants>
+  </PropertyGroup>
+
+</Project>

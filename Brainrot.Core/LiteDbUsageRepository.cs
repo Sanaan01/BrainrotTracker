@@ -11,6 +11,9 @@ namespace Brainrot.Core
         BrainUsageSnapshot GetSnapshotForDate(DateOnly date);
         IReadOnlyDictionary<string, UsageCategory> LoadCategories();
         void SaveCategory(string appName, UsageCategory category);
+        IEnumerable<UsageAggregate> GetAggregates(DateTime startInclusive, DateTime endExclusive);
+        IEnumerable<UsageTimelineBin> GetTimelineBins(DateTime startInclusive, DateTime endExclusive, TimeSpan binSize);
+        void DeleteAllData();
     }
 
     public sealed class LiteDbUsageRepository : IUsageRepository, IDisposable
@@ -129,6 +132,90 @@ namespace Brainrot.Core
 
             _database.Dispose();
             _disposed = true;
+        }
+
+        public IEnumerable<UsageAggregate> GetAggregates(DateTime startInclusive, DateTime endExclusive)
+        {
+            var aggregates = new Dictionary<DateOnly, UsageAggregate>();
+
+            var entries = _usageCollection.Query()
+                .Where(x => x.Timestamp >= startInclusive && x.Timestamp < endExclusive)
+                .ToEnumerable();
+
+            foreach (var entry in entries)
+            {
+                var date = DateOnly.FromDateTime(entry.Timestamp);
+                if (!aggregates.TryGetValue(date, out var agg))
+                {
+                    agg = new UsageAggregate(date);
+                    aggregates[date] = agg;
+                }
+
+                switch (entry.Category)
+                {
+                    case UsageCategory.Rot:
+                        agg.RotSeconds += entry.DurationSeconds;
+                        break;
+                    case UsageCategory.Focus:
+                        agg.FocusSeconds += entry.DurationSeconds;
+                        break;
+                    default:
+                        agg.NeutralSeconds += entry.DurationSeconds;
+                        break;
+                }
+            }
+
+            return aggregates.Values.OrderBy(a => a.Date);
+        }
+
+        public IEnumerable<UsageTimelineBin> GetTimelineBins(DateTime startInclusive, DateTime endExclusive, TimeSpan binSize)
+        {
+            if (binSize <= TimeSpan.Zero)
+                throw new ArgumentException("Bin size must be positive", nameof(binSize));
+
+            int binCount = (int)Math.Ceiling((endExclusive - startInclusive).TotalSeconds / binSize.TotalSeconds);
+            if (binCount <= 0)
+                return Array.Empty<UsageTimelineBin>();
+
+            var bins = new UsageTimelineBin[binCount];
+            for (int i = 0; i < binCount; i++)
+            {
+                bins[i] = new UsageTimelineBin(startInclusive.AddSeconds(binSize.TotalSeconds * i));
+            }
+
+            var entries = _usageCollection.Query()
+                .Where(x => x.Timestamp >= startInclusive && x.Timestamp < endExclusive)
+                .ToEnumerable();
+
+            foreach (var entry in entries)
+            {
+                var offsetSeconds = (entry.Timestamp - startInclusive).TotalSeconds;
+                int idx = (int)Math.Floor(offsetSeconds / binSize.TotalSeconds);
+                if (idx < 0 || idx >= binCount)
+                    continue;
+
+                var bin = bins[idx];
+                switch (entry.Category)
+                {
+                    case UsageCategory.Rot:
+                        bin.RotSeconds += entry.DurationSeconds;
+                        break;
+                    case UsageCategory.Focus:
+                        bin.FocusSeconds += entry.DurationSeconds;
+                        break;
+                    default:
+                        bin.NeutralSeconds += entry.DurationSeconds;
+                        break;
+                }
+            }
+
+            return bins;
+        }
+
+        public void DeleteAllData()
+        {
+            _usageCollection.DeleteAll();
+            _categoryCollection.DeleteAll();
         }
     }
 

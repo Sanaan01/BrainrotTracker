@@ -172,6 +172,48 @@ namespace Brainrot.Core
             );
         }
 
+        public IEnumerable<UsageAggregate> GetAggregates(int daysBack)
+        {
+            var end = DateTime.Today.AddDays(1);
+            var start = end.AddDays(-daysBack);
+            return _usageRepository.GetAggregates(start, end);
+        }
+
+        public IEnumerable<UsageTimelineBin> GetTimelineBins(DateTime startInclusive, DateTime endExclusive, TimeSpan binSize)
+        {
+            return _usageRepository.GetTimelineBins(startInclusive, endExclusive, binSize);
+        }
+
+        public void ClearAllData()
+        {
+            _usageRepository.DeleteAllData();
+
+            _perAppSeconds = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            _rotSeconds = 0;
+            _focusSeconds = 0;
+            _neutralSeconds = 0;
+            _currentDate = DateOnly.FromDateTime(DateTime.Now);
+
+            // Persist current category lists back into the cleared store
+            PersistCategories();
+        }
+
+        private void PersistCategories()
+        {
+            foreach (var app in _rotApps)
+            {
+                _usageRepository.SaveCategory(app, UsageCategory.Rot);
+            }
+            foreach (var app in _focusApps)
+            {
+                _usageRepository.SaveCategory(app, UsageCategory.Focus);
+            }
+            foreach (var app in _neutralApps)
+            {
+                _usageRepository.SaveCategory(app, UsageCategory.Neutral);
+            }
+        }
+
         public IReadOnlyCollection<string> RotApps => _rotApps;
 
         public IReadOnlyCollection<string> FocusApps => _focusApps;
